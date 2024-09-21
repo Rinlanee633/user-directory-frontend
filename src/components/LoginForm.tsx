@@ -1,6 +1,8 @@
-import React from 'react';
+import React , { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import loginImage from '../assets/login.jpg';
+import loginImage from '../assets/images/login.jpg';
+import { useAuth } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -29,21 +31,26 @@ const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 
 `;
 
 const Input = styled.input`
-  width: 93%;
+  width: 100%;
   padding: 12px;
   margin: 8px 0;
   border: 1px solid #ddd;
   border-radius: 4px;
+  box-sizing: border-box;
+`;
+
+const ForgotPasswordContainer = styled.div`
+    margin-top: 10px;
+    text-align: right;
 `;
 
 const FogotPasswordLink = styled.a`
-  margin-top: 10px;
   font-size: 14px;
-  text-align: right;
-  color: #1877f2;
+  color: #0088ff;
   text-decoration: underline;
   cursor: pointer;
 
@@ -55,7 +62,7 @@ const FogotPasswordLink = styled.a`
 const Button = styled.button`
   width: 100%;
   padding: 12px;
-  background: #1877f2;
+  background: #0088ff;
   color: white;
   border: none;
   border-radius: 4px;
@@ -68,17 +75,39 @@ const Button = styled.button`
   }
 `;
 const LoginForm = () => {
-  return (
-    // <Image src={loginImage} alt=""/>
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const navigate = useNavigate();
+  const { login, isLoggedIn } = useAuth();
 
+  useEffect(() => {
+    if (isLoggedIn) {
+        navigate('/home', { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    login(username, password);
+    console.log(isLoggedIn);
+   
+  }
+
+  return (
       <Wrapper>
         <ImageContainer />
         <FormContainer>
-          <h2>Login</h2>
-          <Input type="text" placeholder="Email or Phone" />
-          <Input type="password" placeholder="Password" />
-          <FogotPasswordLink>Forgot Password?</FogotPasswordLink>
-          <Button>Log In</Button>
+          <h2 style={{ textAlign: 'center' }}>MyDash</h2>
+
+          <form onSubmit={handleSubmit}>
+            <Input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)}/>
+            <Input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
+            <ForgotPasswordContainer>
+              <FogotPasswordLink>Forgot Password?</FogotPasswordLink>
+            </ForgotPasswordContainer>
+
+            <Button type="submit">Login</Button>
+          </form>
 
         </FormContainer>
       </Wrapper>

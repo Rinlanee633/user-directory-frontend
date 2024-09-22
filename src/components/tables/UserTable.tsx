@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { generateUsers } from '../../mocks/generateUsers'
 import { User } from '../../models/User'
 import { userColumns } from './tableColumns';
+import UserDetailModal from './UserDetailModal'
 
 const FilterContainer = styled.div`
   margin: 10px;
@@ -60,10 +61,10 @@ const Table = styled.table`
 `;
 
 const UserTable = () => {
+  const [users, setUsers] = useState<User[]>(generateUsers(30));
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
- 
-  const [users, setUsers] = useState<User[]>(generateUsers(30));
 
 
   const filteredUsers = users.filter(user =>{
@@ -71,6 +72,14 @@ const UserTable = () => {
     const matchesStatus = statusFilter === 'All' || user.status === statusFilter;
     return matchesUsername && matchesStatus;
   });
+
+  const handleRowClick = (user: User) => {
+    setSelectedUser(user); // แสดง Modal เมื่อคลิกที่แถว
+  };
+
+  const handleCloseModal = () => {
+    setSelectedUser(null); // ปิด Modal
+  };
 
   return (
     <>
@@ -94,15 +103,15 @@ const UserTable = () => {
       <TableContainer>
         <Table>
           <thead>
-            <tr>
-              {userColumns.map(column => (
-                <th key={column.key}>{column.label}</th>
-              ))}
-            </tr>
+            
+            {userColumns.map(column => (
+              <th key={column.key}>{column.label}</th>
+            ))}
+          
           </thead>
           <tbody>
             {filteredUsers.map((user: User) => (
-              <tr key={user.id}>
+              <tr key={user.id} onClick={() => handleRowClick(user)}>
                 {userColumns.map(column => (
                   <td key={column.key}>
                     {column.key && column.key === 'joinDate'
@@ -115,6 +124,10 @@ const UserTable = () => {
             ))}
           </tbody>
         </Table>
+        {/* Modal */}
+        {selectedUser && (
+          <UserDetailModal user={selectedUser} onClose={handleCloseModal} />
+        )}
       </TableContainer>
     </>
   );

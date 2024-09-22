@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { FaBars } from "react-icons/fa";
 
 export const Container = styled.div`
@@ -35,10 +35,6 @@ export const ClosedSideBar = styled.header`
       cursor: pointer;
       color: #c4c4c4;
       padding: 16px 0;
-
-      &:hover {
-        color: var(--third-color);
-      }
     }
   }
 `;

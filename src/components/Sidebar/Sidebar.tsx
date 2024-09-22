@@ -58,11 +58,9 @@ const SideBar = () => {
                 <ul>
                   <li>
                     <FaHome style={{ marginRight: '10px', color: '#0088ff', fontSize: '24px' }} />
-                    <p>Home</p>
+                    <p>Dashboard</p>
                   </li>
-                  <li>
-                    <p>Item2</p>
-                  </li>
+                  
                 </ul>
               </nav>
               <div>

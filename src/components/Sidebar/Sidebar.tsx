@@ -4,7 +4,7 @@ import { FaHome } from 'react-icons/fa';
 import logo from "../../assets/images/logo.png"
 
 const SideBar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleChangeSideBar = () =>  {
     setIsOpen((prevState) => !prevState);

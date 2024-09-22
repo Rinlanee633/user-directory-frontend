@@ -1,16 +1,20 @@
-import React from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import React, {useState} from 'react';
+import GlobalStyles from '../styles.ts/globalStyles';
+import styled from 'styled-components';
+import Sidebar from '../components/Sidebar/Sidebar';
+
+const AppContainer = styled.div`
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+`;
 
 const Home = () => {
-
-  const { logout, user } = useAuth();
-  
   return (
-    <div style={{ padding: '20px' }}>
-    <h1>Welcome to the Home Page!</h1>
-    {user && <h2>Hello, {user.username}!</h2>}
-    <button onClick={logout}>Logout</button>
-  </div>
+    <>
+    <GlobalStyles />
+    <Sidebar />
+  </>
+  
   );
 };
 export default Home;

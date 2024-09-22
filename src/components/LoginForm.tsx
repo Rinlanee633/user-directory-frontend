@@ -1,7 +1,7 @@
 import React , { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import loginImage from '../assets/images/login.jpg';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
@@ -30,8 +30,7 @@ const FormContainer = styled.div`
   padding: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 
+  height: 280px;
 `;
 
 const Input = styled.input`
@@ -41,6 +40,11 @@ const Input = styled.input`
   border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
+
+  &:focus {
+      outline: none;
+      box-shadow: 0px 0px 2px;
+    }
 `;
 
 const ForgotPasswordContainer = styled.div`
@@ -74,24 +78,39 @@ const Button = styled.button`
     background: #165ec7;
   }
 `;
+
+const ErrorContainer = styled.div`
+  margin-top: 10px;
+  text-align: center;
+`;
+
 const LoginForm = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
-  const { login, isLoggedIn } = useAuth();
+  const { login, error, setError} = useAuth();
 
-  useEffect(() => {
-    if (isLoggedIn) {
-        navigate('/home', { replace: true });
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+    if (error) {
+        setError(null); 
     }
-  }, [isLoggedIn, navigate]);
+  };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    login(username, password);
-    console.log(isLoggedIn);
-   
-  }
+  const handlePassnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (error) {
+        setError(null); 
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (login(username, password)) {
+      navigate('/home');
+    }
+  };
+  
 
   return (
       <Wrapper>
@@ -100,13 +119,27 @@ const LoginForm = () => {
           <h2 style={{ textAlign: 'center' }}>MyDash</h2>
 
           <form onSubmit={handleSubmit}>
-            <Input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)}/>
-            <Input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
+            <Input 
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={handleUsernameChange}
+              style={{ borderColor: error && !username ? 'red' : '#ddd' }}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              onChange={handlePassnameChange}
+              style={{ borderColor: error && !password ? 'red' : '#ddd' }}
+            />
             <ForgotPasswordContainer>
               <FogotPasswordLink>Forgot Password?</FogotPasswordLink>
             </ForgotPasswordContainer>
 
             <Button type="submit">Login</Button>
+            <ErrorContainer>
+              {error && <p style={{ color: 'red', fontSize: '14px' }}>{error}</p>}
+            </ErrorContainer>
           </form>
 
         </FormContainer>
@@ -116,4 +149,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-

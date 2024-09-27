@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { generateUsers } from '../../mocks/generateUsers'
-import { User } from '../../models/User'
-import { userColumns } from './tableColumns';
-import UserDetailModal from './UserDetailModal'
+import React, { useState } from "react";
+import styled from "styled-components";
+import { generateUsers } from "../../mocks/generateUsers";
+import { User } from "../../models/User";
+import { userColumns } from "./tableColumns";
+import UserDetailModal from "./UserDetailModal";
 
 const FilterContainer = styled.div`
   margin: 10px;
-
 `;
 
 const TableContainer = styled.div`
@@ -39,7 +38,8 @@ const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
 
-  th, td {
+  th,
+  td {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -48,11 +48,11 @@ const Table = styled.table`
   th {
     background-color: #2a36b1;
     color: white;
+    cursor: default;
   }
 
   tr {
     cursor: pointer;
-
   }
 
   tr:hover {
@@ -63,13 +63,15 @@ const Table = styled.table`
 const UserTable = () => {
   const [users, setUsers] = useState<User[]>(generateUsers(30));
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
 
-
-  const filteredUsers = users.filter(user =>{
-    const matchesUsername = user.username.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'All' || user.status === statusFilter;
+  const filteredUsers = users.filter((user) => {
+    const matchesUsername = user.username
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      statusFilter === "All" || user.status === statusFilter;
     return matchesUsername && matchesStatus;
   });
 
@@ -85,39 +87,39 @@ const UserTable = () => {
     <>
       <FilterContainer>
         <SearchInput
-            type="text"
-            placeholder="Search by username"
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-          <SelectStatus
-            value={statusFilter}
-            onChange={e => setStatusFilter(e.target.value)} // อัปเดตสถานะฟิลเตอร์
-          >
-            <option value="All">All</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </SelectStatus>
+          type="text"
+          placeholder="Search by username"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <SelectStatus
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)} // อัปเดตสถานะฟิลเตอร์
+        >
+          <option value="All">All</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </SelectStatus>
       </FilterContainer>
 
       <TableContainer>
         <Table>
           <thead>
-            
-            {userColumns.map(column => (
-              <th key={column.key}>{column.label}</th>
-            ))}
-          
+            <tr>
+              {userColumns.map((column) => (
+                <th key={column.key}>{column.label}</th>
+              ))}
+            </tr>
           </thead>
+
           <tbody>
             {filteredUsers.map((user: User) => (
               <tr key={user.id} onClick={() => handleRowClick(user)}>
-                {userColumns.map(column => (
+                {userColumns.map((column) => (
                   <td key={column.key}>
-                    {column.key && column.key === 'joinDate'
+                    {column.key && column.key === "joinDate"
                       ? (user[column.key] as Date).toDateString()
-                      : user[column.key]
-                    }
+                      : user[column.key]}
                   </td>
                 ))}
               </tr>
@@ -134,5 +136,3 @@ const UserTable = () => {
 };
 
 export default UserTable;
-
-
